@@ -21,6 +21,11 @@ const con = mysql.createConnection({
 const publicDirectory = path.join(__dirname,'./public')
 app.use(express.static(publicDirectory))
 
+// parsing URL encoded bodies (as send by HTML forms)
+app.use(express.urlencoded({extended:false}))
+// parse JSON bodies (as sent by API clients)
+app.use(express.json())
+
 app.set('view engine', 'hbs')
 
 
@@ -29,11 +34,9 @@ app.set('view engine', 'hbs')
     console.log("Connected!");
   });
 
-
-// ROOUTE
-app.get('/',(req,res)=>{
-   res.render('index')
-})
+// Define routes
+app.use('/',require('./routes/pages'))
+app.use('/auth', require('./routes/auth'))
 
 // SERVER CONNECTION
 app.listen('5000',() =>{
